@@ -40,11 +40,7 @@ public class RepliesController {
             @RequestBody @Valid RepliesRequestDTO.ReplyCreateRequest request,
             HttpServletRequest req
     ){
-        HttpSession session = req.getSession(false);
-        if (session == null) {return ResponseEntity.status(401).body(new ApiResponse<>("session expired", null));}
-        Long userId = (Long) session.getAttribute("USER_ID");
-
-        RepliesResponseDTO.ReplyDetailResponse result = repliesService.createReply(userId, request);
+        RepliesResponseDTO.ReplyDetailResponse result = repliesService.createReply(req, request);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -61,11 +57,7 @@ public class RepliesController {
             @RequestBody @Valid RepliesRequestDTO.ReplyUpdateRequest request,
             HttpServletRequest req
     ){
-        HttpSession session = req.getSession(false);
-        if (session == null) {return ResponseEntity.status(401).body(new ApiResponse<>("session expired", null));}
-        Long userId = (Long) session.getAttribute("USER_ID");
-
-        RepliesResponseDTO.ReplyDetailResponse result = repliesService.updateReply(replyId, userId, request);
+        RepliesResponseDTO.ReplyDetailResponse result = repliesService.updateReply(replyId, req, request);
 
         return ResponseEntity.ok(new ApiResponse<>("reply successfully updated", result));
     }
@@ -75,11 +67,7 @@ public class RepliesController {
             @PathVariable("replyId") Long replyId,
             HttpServletRequest req
     ){
-        HttpSession session = req.getSession(false);
-        if (session == null) {return ResponseEntity.status(401).body(new ApiResponse<>("session expired", null));}
-        Long userId = (Long) session.getAttribute("USER_ID");
-
-        repliesService.deleteReply(replyId, userId);
+        repliesService.deleteReply(replyId, req);
 
         return ResponseEntity.noContent().build();
     }

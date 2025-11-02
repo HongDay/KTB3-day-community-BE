@@ -25,11 +25,7 @@ public class LikesPostsController {
             @PathVariable("postId") Long postId,
             HttpServletRequest req
     ){
-        HttpSession session = req.getSession(false);
-        if (session == null) {return ResponseEntity.status(401).body(new ApiResponse<>("sessoin expired", null));}
-        Long userId = (Long) session.getAttribute("USER_ID");
-
-        LikesPostsResponseDTO.LikesPostsResultResponse result = likesPostsService.likeCreate(postId, userId);
+        LikesPostsResponseDTO.LikesPostsResultResponse result = likesPostsService.likeCreate(postId, req);
 
         return ResponseEntity.ok(new ApiResponse<>("like added", result));
     }
@@ -39,11 +35,7 @@ public class LikesPostsController {
             @PathVariable("postId") Long postId,
             HttpServletRequest req
     ){
-        HttpSession session = req.getSession(false);
-        if (session == null) {return ResponseEntity.status(401).body(new ApiResponse<>("sessoin expired", null));}
-        Long userId = (Long) session.getAttribute("USER_ID");
-
-        LikesPostsResponseDTO.LikesPostsResultResponse result = likesPostsService.likeDelete(postId, userId);
+        LikesPostsResponseDTO.LikesPostsResultResponse result = likesPostsService.likeDelete(postId, req);
 
         return ResponseEntity.ok(new ApiResponse<>("like deleted", result));
     }

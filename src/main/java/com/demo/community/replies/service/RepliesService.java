@@ -9,6 +9,8 @@ import com.demo.community.replies.dto.RepliesResponseDTO;
 import com.demo.community.users.domain.enitty.Users;
 import com.demo.community.users.domain.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +36,13 @@ public class RepliesService {
 
         List<Replies> replies = repliesRepository.findSliceByPostId(postId, lastSeenId, PageRequest.of(0, size + 1));
 
+        boolean hasNext = replies.size() > size;
+        if (hasNext){
+            replies = replies.subList(0, size);
+        }
+
+        Long nextCursor = replies.isEmpty() ? null : replies.getLast().getId();
+
         List<RepliesResponseDTO.ReplyDetailResponse> result = replies.stream().map(
                 reply -> RepliesResponseDTO.ReplyDetailResponse.builder()
                         .id(reply.getId())
@@ -44,18 +53,15 @@ public class RepliesService {
                         .profileImg(reply.getUsers().getProfileImage())
                         .build()).toList();
 
-        boolean hasNext = replies.size() > size;
-        if (hasNext){
-            replies = replies.subList(0, size);
-        }
-
-        Long nextCursor = replies.isEmpty() ? null : replies.getLast().getId();
-
         return new RepliesResponseDTO.ReplyListSliceResponse(result, hasNext, nextCursor);
     }
 
     @Transactional
-    public RepliesResponseDTO.ReplyDetailResponse createReply(Long userId, RepliesRequestDTO.ReplyCreateRequest request){
+    public RepliesResponseDTO.ReplyDetailResponse createReply(HttpServletRequest req, RepliesRequestDTO.ReplyCreateRequest request){
+
+//        HttpSession session = req.getSession(false);
+//        Long userId = (Long) session.getAttribute("USER_ID");
+        Long userId = (Long) req.getAttribute("userId");
 
         Optional<Users> user = userRepository.findById(userId);
         if(user.isEmpty()){throw new EntityNotFoundException("user not found");}
@@ -81,14 +87,16 @@ public class RepliesService {
     }
 
     @Transactional
-    public RepliesResponseDTO.ReplyDetailResponse updateReply(Long replyId, Long userId, RepliesRequestDTO.ReplyUpdateRequest request){
+    public RepliesResponseDTO.ReplyDetailResponse updateReply(Long replyId, HttpServletRequest req, RepliesRequestDTO.ReplyUpdateRequest request){
 
         Optional<Replies> reply = repliesRepository.findById(replyId);
         if(reply.isEmpty()){throw new EntityNotFoundException("post not found");}
-
         Replies gotReply = reply.get();
 
         // 인가
+//        HttpSession session = req.getSession(false);
+//        Long userId = (Long) session.getAttribute("USER_ID");
+        Long userId = (Long) req.getAttribute("userId");
         if (!Objects.equals(userId, gotReply.getUsers().getId())){
             throw new AccessDeniedException("forbidden user (not a writer)");
         }
@@ -107,11 +115,15 @@ public class RepliesService {
     }
 
     @Transactional
-    public void deleteReply(Long replyId, Long userId){
+    public void deleteReply(Long replyId, HttpServletRequest req){
 
         Optional<Replies> reply = repliesRepository.findById(replyId);
         if(reply.isEmpty()){throw new EntityNotFoundException("post not found");}
 
+        // 인가
+//        HttpSession session = req.getSession(false);
+//        Long userId = (Long) session.getAttribute("USER_ID");
+        Long userId = (Long) req.getAttribute("userId");
         if (!reply.get().getUsers().getId().equals(userId)){
             throw new EntityNotFoundException("delete forbidden user");
         }

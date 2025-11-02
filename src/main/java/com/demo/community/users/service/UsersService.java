@@ -1,5 +1,6 @@
 package com.demo.community.users.service;
 
+import com.demo.community.common.dto.ApiResponse;
 import com.demo.community.likes.domain.repository.LikesPostsRepository;
 import com.demo.community.posts.domain.entity.Posts;
 import com.demo.community.posts.domain.repository.PostRepository;
@@ -10,7 +11,10 @@ import com.demo.community.users.dto.UsersRequestDTO;
 import com.demo.community.users.dto.UsersResponseDTO;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -119,11 +123,7 @@ public class UsersService {
     }
 
     @Transactional
-    public UsersResponseDTO.UserInfoResponse getUser (Long userId, Long curUser){
-        // 인가
-        if (!Objects.equals(userId, curUser)) {
-            throw new EntityNotFoundException("forbidden user (not a writer)");
-        }
+    public UsersResponseDTO.UserInfoResponse getUser (Long userId){
 
         Users user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("user not found"));
@@ -140,10 +140,13 @@ public class UsersService {
     @Transactional
     public void modifyPassword (
             UsersRequestDTO.PasswordUpdateRequest request,
-            Long userId,
+            HttpServletRequest req,
             Long curUser
     ){
         // 인가
+//        HttpSession session = req.getSession(false);
+//        Long userId = (Long) session.getAttribute("USER_ID");
+        Long userId = (Long) req.getAttribute("userId");
         if (!Objects.equals(userId, curUser)) {
             throw new EntityNotFoundException("forbidden user");
         }
@@ -162,9 +165,13 @@ public class UsersService {
     @Transactional
     public UsersResponseDTO.UserInfoResponse updateProfile (
         UsersRequestDTO.UserUpdateRequest request,
-        Long userId,
+        HttpServletRequest req,
         Long curUser
     ){
+        // 인가
+//        HttpSession session = req.getSession(false);
+//        Long userId = (Long) session.getAttribute("USER_ID");
+        Long userId = (Long) req.getAttribute("userId");
         if (!Objects.equals(userId, curUser)) {
             throw new EntityNotFoundException("forbidden user (not a writer)");
         }
@@ -186,15 +193,18 @@ public class UsersService {
     }
 
     @Transactional
-    public void deleteUser(Long userId, Long curUser){
-        Optional<Users> user = userRepository.findById(userId);
-        if (user.isEmpty()){throw new EntityNotFoundException("user not found");}
-
-        // 여기서 lazy 로딩 될듯?
-        if (userId != curUser){
+    public void deleteUser(Long userId, HttpServletRequest req){
+        // 인가
+//        HttpSession session = req.getSession(false);
+//        Long curUser = (Long) session.getAttribute("USER_ID");
+        Long curUser = (Long) req.getAttribute("userId");
+        if (!Objects.equals(userId, curUser)){
             // 이 예외도 나중에 실패코드를 응답하는 커스텀 예외로 변경해야함.
             throw new EntityNotFoundException("delete forbidden user");
         }
+
+        Optional<Users> user = userRepository.findById(userId);
+        if (user.isEmpty()){throw new EntityNotFoundException("user not found");}
 
         // Post, 댓글은 안지우고 FK를 null로 만들고, 게시글 좋아요만 지우면 됨.
         postRepository.nullifyUserReferences(userId);

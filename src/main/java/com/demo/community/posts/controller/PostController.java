@@ -30,12 +30,7 @@ public class PostController {
             @RequestBody @Valid PostRequestDTO.PostCreateRequest request,
             HttpServletRequest req
     ){
-        // 원래 header에서 받아와야 하지만, 토큰 구현이 안되어있으므로 일단 userId = 1 로 고정
-        HttpSession session = req.getSession(false);
-        if (session == null) {return ResponseEntity.status(401).body(new ApiResponse<>("sessoin expired", null));}
-        Long userId = (Long) session.getAttribute("USER_ID");
-
-        PostResponseDTO.PostCreateResponse result = postService.createPost(request, userId);
+        PostResponseDTO.PostCreateResponse result = postService.createPost(request, req);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -63,11 +58,8 @@ public class PostController {
             @PathVariable("postId") Long postId,
             HttpServletRequest req
     ){
-        HttpSession session = req.getSession(false);
-        if (session == null) {return ResponseEntity.status(401).body(new ApiResponse<>("sessoin expired", null));}
-        Long userId = (Long) session.getAttribute("USER_ID");
 
-        PostResponseDTO.PostDetailResponse result = postService.detailPost(postId, userId);
+        PostResponseDTO.PostDetailResponse result = postService.detailPost(postId, req);
 
         return ResponseEntity.ok(new ApiResponse<>("post detail successed", result));
     }
@@ -78,13 +70,7 @@ public class PostController {
             @PathVariable("postId") Long postId,
             HttpServletRequest req
     ){
-        // 원래 header에서 받아와야 하지만, 토큰 구현이 안되어있으므로 일단 userId = 1 로 고정
-        HttpSession session = req.getSession(false);
-        if (session == null) {return ResponseEntity.status(401).body(new ApiResponse<>("sessoin expired", null));}
-        Long userId = (Long) session.getAttribute("USER_ID");
-
-
-        postService.deletePost(postId, userId);
+        postService.deletePost(postId, req);
 
         return ResponseEntity.noContent().build();
     }
@@ -96,12 +82,7 @@ public class PostController {
             @RequestBody @Valid PostRequestDTO.PostUpdateRequest request,
             HttpServletRequest req
     ){
-        // 원래 header에서 받아와야 하지만, 토큰 구현이 안되어있으므로 일단 userId = 1 로 고정
-        HttpSession session = req.getSession(false);
-        if (session == null) {return ResponseEntity.status(401).body(new ApiResponse<>("sessoin expired", null));}
-        Long userId = (Long) session.getAttribute("USER_ID");
-
-        PostResponseDTO.PostUpdateResponse result = postService.updatePost(request, postId, userId);
+        PostResponseDTO.PostUpdateResponse result = postService.updatePost(request, postId, req);
 
         return ResponseEntity.ok(new ApiResponse<>("post modified", result));
     }

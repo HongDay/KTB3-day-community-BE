@@ -97,11 +97,7 @@ public class UsersController {
         @RequestBody @Valid UsersRequestDTO.UserUpdateRequest request,
         HttpServletRequest req
     ){
-        HttpSession session = req.getSession(false);
-        if (session == null) {return ResponseEntity.status(401).body(new ApiResponse<>("sessoin expired", null));}
-        Long curUser = (Long) session.getAttribute("USER_ID");
-
-        UsersResponseDTO.UserInfoResponse result = usersService.updateProfile(request, userId, curUser);
+        UsersResponseDTO.UserInfoResponse result = usersService.updateProfile(request, req, userId);
 
         return ResponseEntity.ok(new ApiResponse<>("user successfully modified", result));
     }
@@ -113,11 +109,7 @@ public class UsersController {
             @RequestBody @Valid UsersRequestDTO.PasswordUpdateRequest request,
             HttpServletRequest req
     ) {
-        HttpSession session = req.getSession(false);
-        if (session == null) {return ResponseEntity.status(401).body(new ApiResponse<>("sessoin expired", null));}
-        Long curUser = (Long) session.getAttribute("USER_ID");
-
-        usersService.modifyPassword(request, userId, curUser);
+        usersService.modifyPassword(request, req, userId);
 
         return ResponseEntity.ok(new ApiResponse<>("password successfully modified", null));
     }
@@ -126,15 +118,9 @@ public class UsersController {
     // 유저 상세조회
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<UsersResponseDTO.UserInfoResponse>> getUser(
-            @PathVariable("userId") Long userId,
-            HttpServletRequest req
+            @PathVariable("userId") Long userId
     ){
-        HttpSession session = req.getSession(false);
-        // 인증
-        if (session == null) {return ResponseEntity.status(401).body(new ApiResponse<>("sessoin expired", null));}
-        Long curUser = (Long) session.getAttribute("USER_ID");
-
-        UsersResponseDTO.UserInfoResponse result =usersService.getUser(userId, curUser);
+        UsersResponseDTO.UserInfoResponse result =usersService.getUser(userId);
 
         return ResponseEntity.ok(new ApiResponse<>("user info succefully got", result));
     }
@@ -149,12 +135,7 @@ public class UsersController {
             @PathVariable("userId") Long userId,
             HttpServletRequest req
     ){
-        HttpSession session = req.getSession(false);
-        // 인증
-        if (session == null) {return ResponseEntity.status(401).body(new ApiResponse<>("sessoin expired", null));}
-        Long curUser = (Long) session.getAttribute("USER_ID");
-
-        usersService.deleteUser(userId, curUser);
+        usersService.deleteUser(userId, req);
 
         return ResponseEntity.noContent().build();
     }

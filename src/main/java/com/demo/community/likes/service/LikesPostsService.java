@@ -9,6 +9,8 @@ import com.demo.community.posts.domain.repository.PostsCountsRepository;
 import com.demo.community.users.domain.enitty.Users;
 import com.demo.community.users.domain.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,11 @@ public class LikesPostsService {
     private final PostsCountsRepository postsCountsRepository;
 
     @Transactional
-    public LikesPostsResponseDTO.LikesPostsResultResponse likeCreate(Long postId, Long userId){
+    public LikesPostsResponseDTO.LikesPostsResultResponse likeCreate(Long postId, HttpServletRequest req){
+
+//        HttpSession session = req.getSession(false);
+//        Long userId = (Long) session.getAttribute("USER_ID");
+        Long userId = (Long) req.getAttribute("userId");
 
         boolean nowPressed = likesPostsRepository.existsByUsersIdAndPostsId(userId, postId);
         if (nowPressed){
@@ -53,7 +59,11 @@ public class LikesPostsService {
     }
 
     @Transactional
-    public LikesPostsResponseDTO.LikesPostsResultResponse likeDelete(Long postId, Long userId){
+    public LikesPostsResponseDTO.LikesPostsResultResponse likeDelete(Long postId, HttpServletRequest req){
+
+//        HttpSession session = req.getSession(false);
+//        Long userId = (Long) session.getAttribute("USER_ID");
+        Long userId = (Long) req.getAttribute("userId");
 
         boolean nowPressed = likesPostsRepository.existsByUsersIdAndPostsId(userId, postId);
         if (!nowPressed){

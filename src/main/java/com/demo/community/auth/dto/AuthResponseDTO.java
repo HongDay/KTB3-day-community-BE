@@ -19,5 +19,6 @@ public class AuthResponseDTO {
         private String nickname;
         @NotNull
         private String profileImage;
+        private String token;
     }
 }
