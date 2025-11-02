@@ -1,5 +1,6 @@
 package com.demo.community.common.config;
 
+import com.demo.community.common.filter.JwtAuthFilter;
 import com.demo.community.common.filter.SessionAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private final SessionAuthFilter sessionAuthFilter;
+    private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {return new BCryptPasswordEncoder();}
@@ -33,7 +35,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
                 )
-                .addFilterBefore(sessionAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                //.addFilterBefore(sessionAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

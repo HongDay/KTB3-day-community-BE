@@ -1,5 +1,6 @@
 package com.demo.community.common.dto;
 
+import com.demo.community.common.domain.entity.SessionErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
@@ -11,7 +12,7 @@ public class ApiResponse<T> {
 
     private String message;
 
-    private authErrorCode errorCode;
+    private SessionErrorCode errorCode;
 
     @JsonInclude(JsonInclude.Include.ALWAYS)
     private T data;
