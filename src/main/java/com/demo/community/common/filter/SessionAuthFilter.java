@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 // 스프링 빈 필터로 구현 (시큐리티필터체인에 추가예정)
-@Component
+// @Component
 @RequiredArgsConstructor
 public class SessionAuthFilter extends OncePerRequestFilter {
 

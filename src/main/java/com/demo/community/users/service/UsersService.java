@@ -14,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -109,6 +110,9 @@ public class UsersService {
         }
     }
 
+    @Value("${backurl}")
+    private String backUrl;
+
     // 하드코딩으로 localhost 주소 반환하는 상태.
     @Transactional
     public UsersResponseDTO.UserImageResponse getProfileImageUrl (MultipartFile file) throws IOException {
@@ -117,7 +121,7 @@ public class UsersService {
         Path savepath = Paths.get("./uploads").toAbsolutePath().normalize().resolve(originName);
         file.transferTo(savepath.toFile());
 
-        String finalUrl = "http://localhost:8080/uploads/" + originName;
+        String finalUrl = backUrl + "/uploads/" + originName;
 
         return UsersResponseDTO.UserImageResponse.builder().url(finalUrl).build();
     }

@@ -37,7 +37,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             new Exclusion(HttpMethod.GET, "/replies/*"),
             new Exclusion(HttpMethod.POST, "/users"),
             new Exclusion(HttpMethod.POST, "/users/availability/*"),
-            new Exclusion(HttpMethod.POST, "/users/image")
+            new Exclusion(HttpMethod.POST, "/users/image"),
+            new Exclusion(HttpMethod.GET, "/uploads/**"),
+            new Exclusion(HttpMethod.GET, "/ping")
     );
 
     @Override
