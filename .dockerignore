@@ -1,0 +1,13 @@
+.DS_Store
+
+# 이미지 안에서 빌드할거라 불필요
+build/
+.gradle/
+
+uploads/
+
+.git
+.gitignore
+.gradle
+.idea
+.vscode
