@@ -35,6 +35,9 @@ jobs:
               url: $${{ secrets.PROD_DB_URL }}
               username: $${{ secrets.PROD_DB_USERNAME }}
               password: $${{ secrets.PROD_DB_PASSWORD }}
+              driver-class-name: com.mysql.cj.jdbc.Driver
+            jpa:
+              database-platform: org.hibernate.dialect.MySQL8Dialect
           EOF
 
       # 캐시 효율 극대화를 위해 gradle 의존성 먼저 다운받기
