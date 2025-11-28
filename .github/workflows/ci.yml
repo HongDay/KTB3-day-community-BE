@@ -1,0 +1,48 @@
+name: Spring Boot CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Generate application-prod.yml
+        run: |
+          cat > src/main/resources/application-prod.yml << 'EOF'
+          fronturl:
+            $${{ secrets.PROD_FE_URL }}
+          backurl:
+            $${{ secrets.PROD_BE_URL }}
+          spring:
+            datasource:
+              url: $${{ secrets.PROD_DB_URL }}
+              username: $${{ secrets.PROD_DB_USERNAME }}
+              password: $${{ secrets.PROD_DB_PASSWORD }}
+          EOF
+
+      # 캐시 효율 극대화를 위해 gradle 의존성 먼저 다운받기
+      - name: Download dependencies
+        run: ./gradlew dependencies --no-daemon || true
+
+      - name: Run tests
+        run: ./gradlew test --no-daemon
+
+      - name: Build jar
+        run: ./gradlew bootJar --no-daemon
