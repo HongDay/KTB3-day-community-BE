@@ -45,7 +45,7 @@ jobs:
         run: ./gradlew dependencies --no-daemon || true
 
       - name: Run tests
-        run: SPRING_PROFILES_ACTIVE=prod ./gradlew test --no-daemon
+        run: SPRING_PROFILES_ACTIVE=prod ./gradlew test --no-daemon --stacktrace --info
 
       - name: Build jar
         run: SPRING_PROFILES_ACTIVE=prod ./gradlew bootJar --no-daemon
