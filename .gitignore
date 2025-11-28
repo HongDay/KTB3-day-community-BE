@@ -36,5 +36,9 @@ out/
 ### VS Code ###
 .vscode/
 
+### environment variables ###
+application-local.yml
+application-prod.yml
+
 
 .DS_Store
