@@ -27,14 +27,14 @@ jobs:
         run: |
           cat > src/main/resources/application-prod.yml << 'EOF'
           fronturl:
-            $${{ secrets.PROD_FE_URL }}
+            ${{ secrets.PROD_FE_URL }}
           backurl:
-            $${{ secrets.PROD_BE_URL }}
+            ${{ secrets.PROD_BE_URL }}
           spring:
             datasource:
-              url: $${{ secrets.PROD_DB_URL }}
-              username: $${{ secrets.PROD_DB_USERNAME }}
-              password: $${{ secrets.PROD_DB_PASSWORD }}
+              url: ${{ secrets.PROD_DB_URL }}
+              username: ${{ secrets.PROD_DB_USERNAME }}
+              password: ${{ secrets.PROD_DB_PASSWORD }}
               driver-class-name: com.mysql.cj.jdbc.Driver
             jpa:
               database-platform: org.hibernate.dialect.MySQL8Dialect
