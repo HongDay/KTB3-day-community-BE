@@ -110,21 +110,21 @@ public class UsersService {
         }
     }
 
-    @Value("${backurl}")
-    private String backUrl;
+//    @Value("${backurl}")
+//    private String backUrl;
 
     // 하드코딩으로 localhost 주소 반환하는 상태.
-    @Transactional
-    public UsersResponseDTO.UserImageResponse getProfileImageUrl (MultipartFile file) throws IOException {
-        String originName = file.getOriginalFilename();
-
-        Path savepath = Paths.get("./uploads").toAbsolutePath().normalize().resolve(originName);
-        file.transferTo(savepath.toFile());
-
-        String finalUrl = backUrl + "/uploads/" + originName;
-
-        return UsersResponseDTO.UserImageResponse.builder().url(finalUrl).build();
-    }
+//    @Transactional
+//    public UsersResponseDTO.UserImageResponse getProfileImageUrl (MultipartFile file) throws IOException {
+//        String originName = file.getOriginalFilename();
+//
+//        Path savepath = Paths.get("./uploads").toAbsolutePath().normalize().resolve(originName);
+//        file.transferTo(savepath.toFile());
+//
+//        String finalUrl = backUrl + "/uploads/" + originName;
+//
+//        return UsersResponseDTO.UserImageResponse.builder().url(finalUrl).build();
+//    }
 
     @Transactional
     public UsersResponseDTO.UserInfoResponse getUser (Long userId){
