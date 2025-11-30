@@ -53,12 +53,7 @@ class UsersServiceTest {
 	@DisplayName("이미 있는 이메일로 회원가입 시도")
 	void createUserEmailDuplicateTest(){
 		// given
-		Users user = Users.builder()
-				.email("test@test.com")
-				.password(passwordEncoder.encode("1234"))
-				.nickname("hong")
-				.profileImage("none").build();
-		userRepository.save(user);
+		makeMockUser();
 
 		UsersRequestDTO.UserCreateRequest req =
 				new UsersRequestDTO.UserCreateRequest("test@test.com", "1234", "kim", "none");
@@ -72,12 +67,7 @@ class UsersServiceTest {
 	@DisplayName("이미 있는 닉네임으로 회원가입 시도")
 	void createUserNicknameDuplicateTest(){
 		// given
-		Users user = Users.builder()
-				.email("test@test.com")
-				.password(passwordEncoder.encode("1234"))
-				.nickname("hong")
-				.profileImage("none").build();
-		userRepository.save(user);
+		makeMockUser();
 
 		UsersRequestDTO.UserCreateRequest req =
 				new UsersRequestDTO.UserCreateRequest("random@test.com", "1234", "hong", "none");
@@ -91,12 +81,7 @@ class UsersServiceTest {
 	@DisplayName("중복 이메일 확인")
 	void checkEmailTest() {
 		// given
-		Users user = Users.builder()
-				.email("test@test.com")
-				.password(passwordEncoder.encode("1234"))
-				.nickname("hong")
-				.profileImage("none").build();
-		userRepository.save(user);
+		makeMockUser();
 
 		// when
 		Boolean exists = usersService.checkEmail(
@@ -113,12 +98,7 @@ class UsersServiceTest {
 	@DisplayName("중복 닉네임 확인")
 	void checkNicknameTest() {
 		// given
-		Users user = Users.builder()
-				.email("test@test.com")
-				.password(passwordEncoder.encode("1234"))
-				.nickname("hong")
-				.profileImage("none").build();
-		userRepository.save(user);
+		makeMockUser();
 
 		// when
 		Boolean exists = usersService.checkNickname(
@@ -135,12 +115,7 @@ class UsersServiceTest {
 	@DisplayName("회원정보 조회")
 	void getUserTest() {
 		// given
-		Users user = Users.builder()
-				.email("test@test.com")
-				.password(passwordEncoder.encode("1234"))
-				.nickname("hong")
-				.profileImage("none").build();
-		Users saved = userRepository.save(user);
+		Users saved = makeMockUser();
 
 		// when
 		UsersResponseDTO.UserInfoResponse res = usersService.getUser(saved.getId());
@@ -155,12 +130,7 @@ class UsersServiceTest {
 	@DisplayName("회원정보 수정 (닉네임만)")
 	void updateUserTest() {
 		// given
-		Users user = Users.builder()
-				.email("test@test.com")
-				.password(passwordEncoder.encode("1234"))
-				.nickname("hong")
-				.profileImage("none").build();
-		Users saved = userRepository.save(user);
+		Users saved = makeMockUser();
 
 		// given
 		MockHttpServletRequest req = new MockHttpServletRequest();
@@ -183,12 +153,7 @@ class UsersServiceTest {
 		// given
 		MockHttpServletRequest req = new MockHttpServletRequest();
 
-		Users user = Users.builder()
-				.email("test@test.com")
-				.password(passwordEncoder.encode("1234"))
-				.nickname("hong")
-				.profileImage("none").build();
-		Users saved = userRepository.save(user);
+		Users saved = makeMockUser();
 
 		req.setAttribute("userId", saved.getId());
 
@@ -201,6 +166,15 @@ class UsersServiceTest {
 		// then
 		assertTrue(updated.isPresent());
 		assertTrue(passwordEncoder.matches("4321", updated.get().getPassword()));
+	}
+
+	Users makeMockUser() {
+		Users user = Users.builder()
+				.email("test@test.com")
+				.password(passwordEncoder.encode("1234"))
+				.nickname("hong")
+				.profileImage("none").build();
+		return userRepository.save(user);
 	}
 
 }
