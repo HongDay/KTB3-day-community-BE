@@ -22,7 +22,7 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 # 빌드 결과물 복사
-COPY build/libs/*.jar app.jar
+COPY *.jar app.jar
 
 # 컨테이너에서 빌드파일 실행
 CMD ["java", "-jar", "app.jar"]
