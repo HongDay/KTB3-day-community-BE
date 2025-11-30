@@ -71,24 +71,24 @@ public class UsersController {
     // 프로필 사진 업로드 (임시)
     // 추후에 프로필사진 업로드 프리사인드 S3 url을 반환해주는것으로 변경 (FE는 이 url에 업로드 후, 업로드 위치 URL을 다시 보내줘야 함)
     // 현재는 BE 특정 디렉에 이미지 파일을 저장한 후, 해당 디렉을 URL로 public에 공개하는 방식 사용
-    @PostMapping("/image")
-    public ResponseEntity<ApiResponse<UsersResponseDTO.UserImageResponse>> getUserImageUrl(
-            @RequestPart("img") MultipartFile file
-            ) throws IOException {
-
-         if (file.isEmpty()) {
-             throw new BadRequestException("no file included");
-         }
-
-         String contentType = file.getContentType();
-         if (contentType == null || !contentType.startsWith("image/")){
-             throw new BadRequestException("not an image format file");
-         }
-
-         UsersResponseDTO.UserImageResponse result = usersService.getProfileImageUrl(file);
-
-         return ResponseEntity.ok(new ApiResponse<>("uploaded link provided", result));
-    }
+//    @PostMapping("/image")
+//    public ResponseEntity<ApiResponse<UsersResponseDTO.UserImageResponse>> getUserImageUrl(
+//            @RequestPart("img") MultipartFile file
+//            ) throws IOException {
+//
+//         if (file.isEmpty()) {
+//             throw new BadRequestException("no file included");
+//         }
+//
+//         String contentType = file.getContentType();
+//         if (contentType == null || !contentType.startsWith("image/")){
+//             throw new BadRequestException("not an image format file");
+//         }
+//
+//         UsersResponseDTO.UserImageResponse result = usersService.getProfileImageUrl(file);
+//
+//         return ResponseEntity.ok(new ApiResponse<>("uploaded link provided", result));
+//    }
 
     // 유저 회원정보 수정
     @PatchMapping("/{userId}")

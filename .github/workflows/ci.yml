@@ -41,11 +41,11 @@ jobs:
           EOF
 
       # 캐시 효율 극대화를 위해 gradle 의존성 먼저 다운받기
-      - name: Download dependencies
-        run: ./gradlew dependencies --no-daemon || true
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Run tests
-        run: SPRING_PROFILES_ACTIVE=prod ./gradlew test --no-daemon
+        run: ./gradlew test --no-daemon
 
       - name: Build jar
         run: SPRING_PROFILES_ACTIVE=prod ./gradlew bootJar --no-daemon

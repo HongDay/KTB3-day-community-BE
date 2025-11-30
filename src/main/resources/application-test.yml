@@ -10,3 +10,6 @@ spring:
   h2:
     console:
       enabled: true
+
+fronturl:
+  "https://ktbpractice-hongday.n-e.kr:80"

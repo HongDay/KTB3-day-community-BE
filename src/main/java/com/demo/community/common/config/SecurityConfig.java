@@ -41,8 +41,8 @@ public class SecurityConfig {
                 .build();
     }
 
-    @Value("${fronturl}")
-    private String allowedOrigins;
+//    @Value("${fronturl}")
+//    private String allowedOrigins;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
