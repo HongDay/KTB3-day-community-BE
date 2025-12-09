@@ -33,7 +33,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private static final List<Exclusion> EXCLUSIONS = List.of(
             new Exclusion(HttpMethod.POST, "/auth"),
             new Exclusion(HttpMethod.GET, "/posts"),
-            new Exclusion(HttpMethod.GET, "/posts/*"),
+//            new Exclusion(HttpMethod.GET, "/posts/*"),
             new Exclusion(HttpMethod.GET, "/replies/*"),
             new Exclusion(HttpMethod.POST, "/users"),
             new Exclusion(HttpMethod.POST, "/users/availability/*"),
